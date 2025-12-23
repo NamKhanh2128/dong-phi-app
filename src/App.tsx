@@ -3,7 +3,23 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
+
+// User Pages
+import UserDashboard from "./pages/user/Dashboard";
+import HouseholdPage from "./pages/user/HouseholdPage";
+import FormsPage from "./pages/user/FormsPage";
+import BookingPage from "./pages/user/BookingPage";
+import FeedbackPage from "./pages/user/FeedbackPage";
+
+// Admin Pages
+import AdminLayout from "./pages/admin/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import HouseholdsPage from "./pages/admin/HouseholdsPage";
+import ResidentsPage from "./pages/admin/ResidentsPage";
+import ApprovalsPage from "./pages/admin/ApprovalsPage";
+import AssetsPage from "./pages/admin/AssetsPage";
+import ReportsPage from "./pages/admin/ReportsPage";
+
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -15,8 +31,24 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          {/* User Routes */}
+          <Route path="/" element={<UserDashboard />} />
+          <Route path="/household" element={<HouseholdPage />} />
+          <Route path="/forms" element={<FormsPage />} />
+          <Route path="/booking" element={<BookingPage />} />
+          <Route path="/feedback" element={<FeedbackPage />} />
+
+          {/* Admin Routes */}
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="households" element={<HouseholdsPage />} />
+            <Route path="residents" element={<ResidentsPage />} />
+            <Route path="approvals" element={<ApprovalsPage />} />
+            <Route path="assets" element={<AssetsPage />} />
+            <Route path="reports" element={<ReportsPage />} />
+          </Route>
+
+          {/* Catch-all */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
