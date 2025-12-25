@@ -4,12 +4,14 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-// User Pages
+// User Layout & Pages
+import { UserLayout } from "./components/layout/UserLayout";
 import UserDashboard from "./pages/user/Dashboard";
 import HouseholdPage from "./pages/user/HouseholdPage";
 import FormsPage from "./pages/user/FormsPage";
 import BookingPage from "./pages/user/BookingPage";
 import FeedbackPage from "./pages/user/FeedbackPage";
+import AccountPage from "./pages/user/AccountPage";
 
 // Admin Pages
 import AdminLayout from "./pages/admin/AdminLayout";
@@ -32,11 +34,14 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           {/* User Routes */}
-          <Route path="/" element={<UserDashboard />} />
-          <Route path="/household" element={<HouseholdPage />} />
-          <Route path="/forms" element={<FormsPage />} />
-          <Route path="/booking" element={<BookingPage />} />
-          <Route path="/feedback" element={<FeedbackPage />} />
+          <Route element={<UserLayout />}>
+            <Route path="/" element={<UserDashboard />} />
+            <Route path="/household" element={<HouseholdPage />} />
+            <Route path="/forms" element={<FormsPage />} />
+            <Route path="/booking" element={<BookingPage />} />
+            <Route path="/feedback" element={<FeedbackPage />} />
+            <Route path="/account" element={<AccountPage />} />
+          </Route>
 
           {/* Admin Routes */}
           <Route path="/admin" element={<AdminLayout />}>

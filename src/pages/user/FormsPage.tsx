@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { ArrowLeft, UserMinus, UserPlus, AlertTriangle } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { UserMinus, UserPlus, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { BottomNav } from '@/components/layout/BottomNav';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TamVangForm } from '@/components/user/forms/TamVangForm';
 import { TamTruForm } from '@/components/user/forms/TamTruForm';
@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 
 const formTypes = [
   {
-    id: 'tam_vang',
+    id: 'tamvang',
     label: 'Tạm vắng',
     icon: UserMinus,
     description: 'Khai báo khi thành viên đi khỏi địa phương',
@@ -19,7 +19,7 @@ const formTypes = [
     bgColor: 'bg-warning/10',
   },
   {
-    id: 'tam_tru',
+    id: 'tamtru',
     label: 'Tạm trú / Lưu trú',
     icon: UserPlus,
     description: 'Đăng ký cho khách, người thuê trọ',
@@ -27,7 +27,7 @@ const formTypes = [
     bgColor: 'bg-primary/10',
   },
   {
-    id: 'bien_dong',
+    id: 'biendong',
     label: 'Biến động',
     icon: AlertTriangle,
     description: 'Mới sinh, qua đời, chuyển đi',
@@ -37,24 +37,23 @@ const formTypes = [
 ];
 
 const FormsPage = () => {
-  const [activeTab, setActiveTab] = useState('tam_vang');
+  const [searchParams] = useSearchParams();
+  const tabFromUrl = searchParams.get('tab');
+  const [activeTab, setActiveTab] = useState(tabFromUrl || 'tamvang');
   const [openForm, setOpenForm] = useState<string | null>(null);
 
-  return (
-    <div className="min-h-screen bg-background pb-24">
-      {/* Header */}
-      <header className="gradient-primary sticky top-0 z-50">
-        <div className="container flex h-16 items-center gap-3">
-          <Link to="/">
-            <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-foreground/10">
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-          </Link>
-          <h1 className="text-lg font-semibold text-primary-foreground">Khai báo</h1>
-        </div>
-      </header>
+  useEffect(() => {
+    if (tabFromUrl && formTypes.some(f => f.id === tabFromUrl)) {
+      setActiveTab(tabFromUrl);
+    }
+  }, [tabFromUrl]);
 
-      <main className="container py-6">
+  return (
+    <div className="container py-6">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-3 bg-muted">
             {formTypes.map((form) => (
@@ -70,7 +69,11 @@ const FormsPage = () => {
 
           {formTypes.map((form) => (
             <TabsContent key={form.id} value={form.id} className="mt-6">
-              <div className="animate-fade-in">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.2 }}
+              >
                 <button
                   onClick={() => setOpenForm(form.id)}
                   className="w-full rounded-2xl bg-card p-6 shadow-card transition-all hover:shadow-elevated hover:scale-[1.01] text-left"
@@ -88,27 +91,30 @@ const FormsPage = () => {
                     </div>
                   </div>
                 </button>
-              </div>
+              </motion.div>
             </TabsContent>
           ))}
         </Tabs>
+      </motion.div>
 
-        {/* Recent Submissions */}
-        <section className="mt-8">
-          <h2 className="mb-4 text-lg font-semibold text-foreground">Khai báo gần đây</h2>
-          <div className="rounded-xl bg-card p-4 shadow-card">
-            <p className="text-center text-sm text-muted-foreground py-4">
-              Chưa có khai báo nào
-            </p>
-          </div>
-        </section>
-      </main>
+      {/* Recent Submissions */}
+      <motion.section
+        className="mt-8"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+      >
+        <h2 className="mb-4 text-lg font-semibold text-foreground">Khai báo gần đây</h2>
+        <div className="rounded-xl bg-card p-4 shadow-card">
+          <p className="text-center text-sm text-muted-foreground py-4">
+            Chưa có khai báo nào
+          </p>
+        </div>
+      </motion.section>
 
-      <TamVangForm open={openForm === 'tam_vang'} onClose={() => setOpenForm(null)} />
-      <TamTruForm open={openForm === 'tam_tru'} onClose={() => setOpenForm(null)} />
-      <BienDongForm open={openForm === 'bien_dong'} onClose={() => setOpenForm(null)} />
-
-      <BottomNav />
+      <TamVangForm open={openForm === 'tamvang'} onClose={() => setOpenForm(null)} />
+      <TamTruForm open={openForm === 'tamtru'} onClose={() => setOpenForm(null)} />
+      <BienDongForm open={openForm === 'biendong'} onClose={() => setOpenForm(null)} />
     </div>
   );
 };
