@@ -20,6 +20,7 @@ import HouseholdsPage from "./pages/admin/HouseholdsPage";
 import ResidentsPage from "./pages/admin/ResidentsPage";
 import ApprovalsPage from "./pages/admin/ApprovalsPage";
 import AssetsPage from "./pages/admin/AssetsPage";
+import BookingsPage from "./pages/admin/BookingsPage";
 import ReportsPage from "./pages/admin/ReportsPage";
 
 import NotFound from "./pages/NotFound";
@@ -50,6 +51,7 @@ const App = () => (
             <Route path="residents" element={<ResidentsPage />} />
             <Route path="approvals" element={<ApprovalsPage />} />
             <Route path="assets" element={<AssetsPage />} />
+            <Route path="bookings" element={<BookingsPage />} />
             <Route path="reports" element={<ReportsPage />} />
           </Route>
 
